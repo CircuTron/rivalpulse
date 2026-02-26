@@ -7,7 +7,10 @@ const app = express();
 const PORT = 5000;
 const HOST = '0.0.0.0';
 
-app.use(cors());
+// Restrict CORS to the frontend domain
+app.use(cors({
+    origin: ['http://localhost:5001', 'http://192.168.1.97:5001', 'http://127.0.0.1:5001']
+}));
 
 // Initialize cache with a simple 5-minute TTL (Time to Live)
 const statsCache = new NodeCache({ stdTTL: 300 });
@@ -25,6 +28,12 @@ const getHeroColor = (name) => {
 app.get('/api/stats/:uid', async (req, res) => {
     try {
         const uid = req.params.uid;
+
+        // Input Validation: Ensure uid only contains alphanumeric characters, dashes or underscores
+        // This prevents potential injection attacks down the line if useCurl executes a shell command.
+        if (!/^[a-zA-Z0-9_-]+$/.test(uid)) {
+            return res.status(400).json({ error: "Invalid User ID format." });
+        }
 
         // The default app UID is a numeric ID, but mrivals uses text usernames (e.g. Tron47)
         // If the query is the numeric UID from App.tsx, we mock the real mapping here: 
