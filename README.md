@@ -6,9 +6,6 @@
   <br/>
   <h1>Rivals_Pulse // SYSTEM.ANALYSIS.TERMINAL</h1>
   <p>A high-performance, minimalist tactical HUD for tracking Marvel Rivals player statistics.</p>
-  <a href="https://rivalpulse-production.up.railway.app/">
-    <img src="https://img.shields.io/badge/🔴_LIVE_DEMO-000000?style=for-the-badge&logo=planet&logoColor=white&color=red" alt="Live Demo" />
-  </a>
 </div>
 
 ---
