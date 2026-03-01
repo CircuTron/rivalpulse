@@ -204,25 +204,25 @@ export default function App() {
             <div className="col-span-1 lg:col-span-12 grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-black border border-cyan-900 p-4 relative group hover:border-cyan-500 transition-colors">
                 <div className="absolute top-0 right-0 p-1 bg-cyan-900 text-black text-[8px] font-bold tracking-widest">R.01</div>
-                <p className="text-[10px] text-cyan-700 uppercase tracking-widest mb-1">CRNT_RANK</p>
+                <p className="text-[10px] text-cyan-500 uppercase tracking-widest mb-1">CRNT_RANK</p>
                 <p className="text-2xl font-bold text-cyan-300">{stats.rank}</p>
               </div>
 
               <div className="bg-black border border-cyan-900 p-4 relative group hover:border-cyan-500 transition-colors">
                 <div className="absolute top-0 right-0 p-1 bg-cyan-900 text-black text-[8px] font-bold tracking-widest">M.02</div>
-                <p className="text-[10px] text-cyan-700 uppercase tracking-widest mb-1">MATCHES_PLAYED</p>
+                <p className="text-[10px] text-cyan-500 uppercase tracking-widest mb-1">MATCHES_PLAYED</p>
                 <p className="text-2xl font-bold text-cyan-300">{stats.overview.matchesPlayed}</p>
               </div>
 
               <div className="bg-black border border-emerald-900 p-4 relative group hover:border-emerald-500 transition-colors">
                 <div className="absolute top-0 right-0 p-1 bg-emerald-900 text-black text-[8px] font-bold tracking-widest">W.03</div>
-                <p className="text-[10px] text-emerald-700 uppercase tracking-widest mb-1">GLOBAL_WIN_RT</p>
+                <p className="text-[10px] text-emerald-500 uppercase tracking-widest mb-1">GLOBAL_WIN_RT</p>
                 <p className="text-2xl font-bold text-emerald-400">{stats.overview.winRate}%</p>
               </div>
 
               <div className="bg-black border border-red-900 p-4 relative group hover:border-red-500 transition-colors">
                 <div className="absolute top-0 right-0 p-1 bg-red-900 text-black text-[8px] font-bold tracking-widest">K.04</div>
-                <p className="text-[10px] text-red-700 uppercase tracking-widest mb-1">GLOBAL_K.D.A</p>
+                <p className="text-[10px] text-red-500 uppercase tracking-widest mb-1">GLOBAL_K.D.A</p>
                 <p className="text-2xl font-bold text-red-400">{stats.overview.kda}</p>
               </div>
             </div>
