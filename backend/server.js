@@ -52,8 +52,8 @@ app.get('/api/stats/:uid', async (req, res) => {
         }
 
         console.log(`[CACHE MISS] Fetching fresh stats for ${username} from TRNetwork...`);
-        // Fetch using mrivals
-        const user = await API.fetchUser(username, { useCurl: true });
+        // Fetch using mrivals without curl to prevent native exec crashes in cloud environments
+        const user = await API.fetchUser(username);
         const info = user.info();
         const heroesObj = user.heroes();
 
