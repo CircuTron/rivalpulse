@@ -386,6 +386,18 @@ export default function App() {
             </div>
           )
         )}
+
+        {/* Global Footer */}
+        <footer className="mt-8 pt-4 pb-2 text-center border-t-2 border-dashed border-cyan-900/50">
+          <p className="text-[10px] text-cyan-800 tracking-widest uppercase flex items-center justify-center gap-2">
+            <span>Built by CircuTron</span>
+            <span className="text-cyan-900">|</span>
+            <a href="https://ko-fi.com/" target="_blank" rel="noreferrer" className="text-amber-600 hover:text-amber-400 font-bold transition-colors">
+              Support the Terminal: Buy me an Energy Drink
+            </a>
+          </p>
+        </footer>
+
       </div>
     </div>
   );
