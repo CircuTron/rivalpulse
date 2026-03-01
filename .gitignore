@@ -1,0 +1,17 @@
+node_modules/
+.env
+*.log
+
+# Build files
+dist/
+build/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+
+# Mac OS files
+Thumbs.db

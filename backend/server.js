@@ -1,10 +1,15 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import express from 'express';
 import cors from 'cors';
 import { API } from 'mrivals';
 import NodeCache from 'node-cache';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const HOST = '0.0.0.0';
 
 // Restrict CORS to the frontend domain
@@ -122,6 +127,14 @@ app.get('/api/stats/:uid', async (req, res) => {
         console.error("Error fetching for UID:", req.params.uid, err.message || err);
         res.status(500).json({ error: "Failed to fetch Marvel Rivals live data" });
     }
+});
+
+// Serve frontend static files in production
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Catch-all route for SPA client-side routing
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
 app.listen(PORT, HOST, () => {

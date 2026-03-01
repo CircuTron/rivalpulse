@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Target, Trophy, Swords, Shield, HeartPulse, Activity, Medal, Crosshair, BarChart3, Terminal, Search } from 'lucide-react';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
-const HeroCard = ({ name, role, winRate, kda, color }: any) => {
+const HeroCard = React.memo(({ name, role, winRate, kda }: any) => {
   const getRoleIcon = () => {
     switch (role) {
       case 'Vanguard': return <Shield size={12} className="mr-2" />;
@@ -39,7 +39,66 @@ const HeroCard = ({ name, role, winRate, kda, color }: any) => {
       </div>
     </div>
   );
-};
+});
+
+const RosterDatabank = React.memo(({ allHeroes }: { allHeroes: any[] }) => {
+  const [heroQuery, setHeroQuery] = useState("");
+
+  const filteredHeroes = useMemo(() => {
+    if (!allHeroes) return [];
+    if (!heroQuery) return allHeroes;
+    return allHeroes.filter((h: any) => h.name.toLowerCase().includes(heroQuery.toLowerCase()));
+  }, [allHeroes, heroQuery]);
+
+  return (
+    <div className="col-span-1 lg:col-span-12 mt-8">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div className="flex items-center gap-4 flex-1">
+          <h2 className="text-sm font-bold uppercase text-amber-500 tracking-widest border-b-2 border-amber-500 pb-1">FULL_ROSTER_DATABANK</h2>
+          <div className="flex-1 h-px bg-amber-900"></div>
+        </div>
+        <div className="relative w-full md:w-[300px]">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-600" />
+          <input
+            type="text"
+            value={heroQuery}
+            onChange={(e) => setHeroQuery(e.target.value)}
+            placeholder="QUERY_OPERATIVE..."
+            className="bg-black border border-cyan-900 text-cyan-300 pl-9 pr-4 py-2 w-full text-xs uppercase tracking-widest outline-none transition-colors focus:border-cyan-400 placeholder-cyan-900"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+        {filteredHeroes.map((hero: any, idx: number) => (
+          <div key={hero.name} className="animate-in fade-in zoom-in-95 duration-200 fill-mode-both" style={{ animationDelay: `${(idx % 12) * 50}ms` }}>
+            <div className="bg-black border border-cyan-900/50 p-3 h-full flex flex-col justify-between hover:border-cyan-500 transition-colors">
+              <div>
+                <h3 className="text-xs font-bold text-white uppercase truncate" title={hero.name}>{hero.name}</h3>
+                <p className="text-[9px] text-cyan-600 uppercase tracking-widest mt-1">{hero.role}</p>
+              </div>
+              <div className="mt-4 flex justify-between items-end">
+                <div>
+                  <p className="text-[8px] text-emerald-700 tracking-widest">WIN_RT</p>
+                  <p className="text-sm font-bold text-emerald-500">{hero.winRate}%</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-[8px] text-red-700 tracking-widest">KDA</p>
+                  <p className="text-sm font-bold text-red-500">{hero.kda}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        {filteredHeroes.length === 0 && (
+          <div className="col-span-full py-8 text-center border border-dashed border-cyan-900">
+            <p className="text-cyan-700 text-xs font-bold tracking-widest uppercase">NO_TARGETS_FOUND</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+});
 
 // Custom tooltip for the Recharts graph
 const CustomTooltip = ({ active, payload }: any) => {
@@ -60,13 +119,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [username, setUsername] = useState("Tron47");
-  const [heroQuery, setHeroQuery] = useState("");
-
-  const filteredHeroes = useMemo(() => {
-    if (!stats?.allHeroes) return [];
-    if (!heroQuery) return stats.allHeroes;
-    return stats.allHeroes.filter((h: any) => h.name.toLowerCase().includes(heroQuery.toLowerCase()));
-  }, [stats, heroQuery]);
 
   const fetchMyStats = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -76,7 +128,10 @@ export default function App() {
     setError(null);
     try {
       const safeUsername = encodeURIComponent(username.trim());
-      const response = await fetch(`http://localhost:5000/api/stats/${safeUsername}`);
+      // In development, the Vite server proxies or hits port 5000 directly.
+      // In production, the Node backend serves both the API and the React files from the same origin.
+      const baseUrl = import.meta.env.DEV ? 'http://127.0.0.1:5000' : '';
+      const response = await fetch(`${baseUrl}/api/stats/${safeUsername}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -319,52 +374,7 @@ export default function App() {
             </div>
 
             {/* Extended Roster Database (Searchable) */}
-            <div className="col-span-1 lg:col-span-12 mt-8">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-4 flex-1">
-                  <h2 className="text-sm font-bold uppercase text-amber-500 tracking-widest border-b-2 border-amber-500 pb-1">FULL_ROSTER_DATABANK</h2>
-                  <div className="flex-1 h-px bg-amber-900"></div>
-                </div>
-                <div className="relative w-full md:w-[300px]">
-                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-600" />
-                  <input
-                    type="text"
-                    value={heroQuery}
-                    onChange={(e) => setHeroQuery(e.target.value)}
-                    placeholder="QUERY_OPERATIVE..."
-                    className="bg-black border border-cyan-900 text-cyan-300 pl-9 pr-4 py-2 w-full text-xs uppercase tracking-widest outline-none transition-colors focus:border-cyan-400 placeholder-cyan-900"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {filteredHeroes.map((hero: any, idx: number) => (
-                  <div key={hero.name} className="animate-in fade-in zoom-in-95 duration-200 fill-mode-both" style={{ animationDelay: `${(idx % 12) * 50}ms` }}>
-                    <div className="bg-black border border-cyan-900/50 p-3 h-full flex flex-col justify-between hover:border-cyan-500 transition-colors">
-                      <div>
-                        <h3 className="text-xs font-bold text-white uppercase truncate" title={hero.name}>{hero.name}</h3>
-                        <p className="text-[9px] text-cyan-600 uppercase tracking-widest mt-1">{hero.role}</p>
-                      </div>
-                      <div className="mt-4 flex justify-between items-end">
-                        <div>
-                          <p className="text-[8px] text-emerald-700 tracking-widest">WIN_RT</p>
-                          <p className="text-sm font-bold text-emerald-500">{hero.winRate}%</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-[8px] text-red-700 tracking-widest">KDA</p>
-                          <p className="text-sm font-bold text-red-500">{hero.kda}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {filteredHeroes.length === 0 && (
-                  <div className="col-span-full py-8 text-center border border-dashed border-cyan-900">
-                    <p className="text-cyan-700 text-xs font-bold tracking-widest uppercase">NO_TARGETS_FOUND</p>
-                  </div>
-                )}
-              </div>
-            </div>
+            <RosterDatabank allHeroes={stats.allHeroes} />
 
           </div>
         ) : (
